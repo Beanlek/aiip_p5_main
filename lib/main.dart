@@ -8,27 +8,43 @@ import 'package:flutter/material.dart';
 //for client connection library
 import 'package:flutter_oss_aliyun/flutter_oss_aliyun.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'auth.dart';
+import 'auth_oss.dart';
+import 'auth_postgresql.dart';
 
 //camera function library
 import 'package:camera/camera.dart';
 
+//pages
+import 'preview.dart';
+import 'error.dart';
+
 //misc
 import 'util.dart';
-import 'preview.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load();
-  Client.init(
-      ossEndpoint: "oss-ap-southeast-3.aliyuncs.com",
-      bucketName: "flutterbucket-test1-imran",
-      authGetter: authGetter);
 
-  final cameras = await availableCameras();
-  final camera = cameras.first;
+  try {
+    await dotenv.load();
+    await databaseConnection.open();
+    Client.init(
+        //MALAYSIA
+        ossEndpoint: "oss-ap-southeast-3.aliyuncs.com",
+        bucketName: "flutterbucket-test1-imran",
 
-  runApp(MyApp(camera: camera));
+        //SINGAPORE
+        // ossEndpoint: "oss-ap-southeast-3.aliyuncs.com",
+        // bucketName: "flutterbucket-test2-imran",
+
+        authGetter: authGetter);
+    final cameras = await availableCameras();
+    final camera = cameras.first;
+
+    runApp(MyApp(camera: camera));
+  } catch (e) {
+    // print('Password is: \n$password');
+    runApp(ErrorApp(errorMessage: e.toString()));
+  }
 }
 
 class MyApp extends StatelessWidget {
