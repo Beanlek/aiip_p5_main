@@ -29,13 +29,12 @@ Future main() async {
     await databaseConnection.open();
     Client.init(
         //MALAYSIA
-        ossEndpoint: "oss-ap-southeast-3.aliyuncs.com",
-        bucketName: "flutterbucket-test1-imran",
+        // ossEndpoint: "oss-ap-southeast-3.aliyuncs.com",
+        // bucketName: "flutterbucket-test1-imran",
 
         //SINGAPORE
-        // ossEndpoint: "oss-ap-southeast-3.aliyuncs.com",
-        // bucketName: "flutterbucket-test2-imran",
-
+        ossEndpoint: "oss-ap-southeast-1.aliyuncs.com",
+        bucketName: "flutterbucket-test2-imran",
         authGetter: authGetter);
     final cameras = await availableCameras();
     final camera = cameras.first;
