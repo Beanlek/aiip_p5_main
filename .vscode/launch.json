@@ -21,6 +21,12 @@
             "request": "launch",
             "type": "dart",
             "deviceId": "R9PT80JGLJD"
+        },
+        {
+            "name": "open_AKMAL",
+            "request": "launch",
+            "type": "dart",
+            "deviceId": "d3ae668f"
         }
     ]
 }

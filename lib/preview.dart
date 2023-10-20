@@ -4,7 +4,7 @@
 import 'package:intl/intl.dart';
 import 'dart:typed_data';
 import 'dart:io';
-import 'package:aiip_p5_main/auth_postgresql.dart';
+// import 'package:aiip_p5_main/auth_postgresql.dart';
 import 'package:flutter/material.dart';
 
 //for client connection library
@@ -29,7 +29,7 @@ class DisplayPictureScreen extends StatelessWidget {
   });
 
   Future uploadFile() async {
-    final truePath = 'new-folder/$fileName';
+    final truePath = 'folder-akmal/$fileName';
     await Client().putObject(
       fileBytes,
       truePath,
@@ -48,20 +48,20 @@ class DisplayPictureScreen extends StatelessWidget {
       ),
     );
 
-    final String fileUrl = await Client().getSignedUrl(truePath);
-    final dynamic fileMetadata = await Client().getObjectMeta(truePath);
-    print('SEE HERE: \n\n${fileUrl.substring(0, fileUrl.indexOf('?'))}\n\n');
+    // final String fileUrl = await Client().getSignedUrl(truePath);
+    // final dynamic fileMetadata = await Client().getObjectMeta(truePath);
+    // print('SEE HERE: \n\n${fileUrl.substring(0, fileUrl.indexOf('?'))}\n\n');
 
-    await databaseConnection.query('''
-      INSERT INTO public.table_oss(image_name,image_path,image_metadata,created_at,created_by)
-      VALUES (@fileName,@fileUrl,@fileMetadata,@createdAt,@createdBy);
-      ''', substitutionValues: {
-      'fileName': fileName,
-      'fileUrl': fileUrl.substring(0, fileUrl.indexOf('?')),
-      'fileMetadata': fileMetadata.toString(),
-      'createdAt': myFormat.format(DateTime.now()),
-      'createdBy': 'Van_user1'
-    });
+    // await databaseConnection.query('''
+    //   INSERT INTO public.table_oss(image_name,image_path,image_metadata,created_at,created_by)
+    //   VALUES (@fileName,@fileUrl,@fileMetadata,@createdAt,@createdBy);
+    //   ''', substitutionValues: {
+    //   'fileName': fileName,
+    //   'fileUrl': fileUrl.substring(0, fileUrl.indexOf('?')),
+    //   'fileMetadata': fileMetadata.toString(),
+    //   'createdAt': myFormat.format(DateTime.now()),
+    //   'createdBy': 'Van_user1'
+    // });
   }
 
   @override
