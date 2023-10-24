@@ -11,7 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_oss_aliyun/flutter_oss_aliyun.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'auth_oss.dart';
-import 'auth_postgresql.dart';
 
 //camera function library
 import 'package:camera/camera.dart';
@@ -28,7 +27,6 @@ Future main() async {
 
   try {
     await dotenv.load();
-    await databaseConnection.open();
     Client.init(
         //MALAYSIA
         // ossEndpoint: "oss-ap-southeast-3.aliyuncs.com",
@@ -43,7 +41,6 @@ Future main() async {
 
     runApp(MyApp(camera: camera));
   } catch (e) {
-    // print('Password is: \n$password');
     runApp(ErrorApp(errorMessage: e.toString()));
   }
 }

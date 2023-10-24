@@ -1,16 +1,12 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, use_build_context_synchronously
 
-//basic library
 import 'package:intl/intl.dart';
 import 'dart:typed_data';
 import 'dart:io';
-// import 'package:aiip_p5_main/auth_postgresql.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'package:flutter/material.dart';
-
-//for client connection library
 import 'package:flutter_oss_aliyun/flutter_oss_aliyun.dart';
-
-//misc
 import 'util.dart';
 import 'message.dart';
 
@@ -29,12 +25,11 @@ class DisplayPictureScreen extends StatelessWidget {
   });
 
   Future uploadFile() async {
-    final truePath = 'folder-akmal/$fileName';
+    final truePath = 'folder-aiman/$fileName';
     await Client().putObject(
       fileBytes,
       truePath,
       option: PutRequestOption(
-        // bucketName: 'images-admintest/another-dir/flutterbucket-test1-imran',
         onSendProgress: (count, total) {
           print("send: count = $count, and total = $total");
         },
@@ -48,20 +43,11 @@ class DisplayPictureScreen extends StatelessWidget {
       ),
     );
 
-    // final String fileUrl = await Client().getSignedUrl(truePath);
+    final String fileUrl = await Client().getSignedUrl(truePath);
+    _insertImage(fileName, fileUrl, 'imran-debug');
+
     // final dynamic fileMetadata = await Client().getObjectMeta(truePath);
     // print('SEE HERE: \n\n${fileUrl.substring(0, fileUrl.indexOf('?'))}\n\n');
-
-    // await databaseConnection.query('''
-    //   INSERT INTO public.table_oss(image_name,image_path,image_metadata,created_at,created_by)
-    //   VALUES (@fileName,@fileUrl,@fileMetadata,@createdAt,@createdBy);
-    //   ''', substitutionValues: {
-    //   'fileName': fileName,
-    //   'fileUrl': fileUrl.substring(0, fileUrl.indexOf('?')),
-    //   'fileMetadata': fileMetadata.toString(),
-    //   'createdAt': myFormat.format(DateTime.now()),
-    //   'createdBy': 'Van_user1'
-    // });
   }
 
   @override
@@ -108,5 +94,21 @@ class DisplayPictureScreen extends StatelessWidget {
         ],
       )),
     );
+  }
+
+  String _domainName() {
+    return 'http://47.250.10.195:3030';
+    // return 'http://localhost:8080';
+  }
+
+  _insertImage(String imageName, String imagePath, String createdBy) async {
+    final url = Uri.parse('${_domainName()}/insert/insert_image');
+    http.post(url,
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "image_name": imageName,
+          "image_path": imagePath,
+          "created_by": createdBy
+        }));
   }
 }
