@@ -33,6 +33,12 @@
             "request": "launch",
             "type": "dart",
             "deviceId": "8KB0223426004141"
+        },
+        {
+            "name": "open_AIMAN",
+            "request": "launch",
+            "type": "dart",
+            "deviceId": "30ed8be3"
         }
     ]
 }

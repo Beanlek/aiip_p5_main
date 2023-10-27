@@ -1,0 +1,74 @@
+//INSERT POST IMAGE
+                // Form(
+                //     child: Column(
+                //     children: [
+                //       Padding(
+                //         padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+                //         child: TextFormField(
+                //           controller: _imageNameController,
+                //           decoration: InputDecoration(hintText: 'Image Name'),
+                //         ),
+                //       ),
+                //       spaceVertical(15),
+                //       Padding(
+                //         padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+                //         child: TextFormField(
+                //           controller: _imagePathController,
+                //           decoration: InputDecoration(hintText: 'Image Path'),
+                //         ),
+                //       ),
+                //       spaceVertical(15),
+                //       Padding(
+                //         padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+                //         child: TextFormField(
+                //           controller: _createdByController,
+                //           decoration: InputDecoration(hintText: 'Created By'),
+                //         ),
+                //       ),
+                //       spaceVertical(15),
+                //       ElevatedButton(
+                //           child: Text('Insert Image Data'),
+                //           onPressed: () {
+                //             String imageName = _imageNameController.text.trim();
+                //             String imagePath = _imagePathController.text.trim();
+                //             String createdBy = _createdByController.text.trim();
+
+                //             _insertImage(imageName, imagePath, createdBy);
+                //           }),
+                //     ],
+                //   )),
+
+                _insertImage(String imageName, String imagePath, String createdBy) async {
+    // print("Entering _insertImage");
+    // print(imageName);
+    // print(imagePath);
+    // print(createdBy);
+    final url = Uri.parse('${_domainName()}/insert/insert_image');
+    http.post(url,
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "image_name": imageName,
+          "image_path": imagePath,
+          "created_by": createdBy
+        }));
+
+    setState(() {
+      serverResponse = '''
+{
+  "image_name": $imageName,
+  "image_path": $imagePath,
+  "created_by": $createdBy
+}
+
+''';
+    });
+  }
+
+  const formattedTimestamp = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'Asia/Kuala_Lumpur',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(new Date());
