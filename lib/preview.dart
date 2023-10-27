@@ -3,6 +3,7 @@
 //basic library
 import 'package:aiip_p5_main/util.dart';
 import 'package:intl/intl.dart';
+import 'package:gallery_saver/gallery_saver.dart';
 
 import 'dart:typed_data';
 import 'dart:io';
@@ -45,6 +46,7 @@ class DisplayPictureScreen extends StatelessWidget {
         print(allFileBytes[i]);
         print(allFilePath[i]);
         final truePath = 'API-model-test/${allFileName[i]}';
+        GallerySaver.saveImage(allFilePath[i]);
         await Client().putObject(
           allFileBytes[i],
           truePath,

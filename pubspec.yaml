@@ -27,6 +27,9 @@ environment:
 # dependencies can be manually updated by changing the version numbers below to
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
+dependency_overrides:
+  http: ^0.13.6
+  
 dependencies:
   flutter:
     sdk: flutter
@@ -43,6 +46,7 @@ dependencies:
   lottie: ^2.7.0
   assets_audio_player: ^3.1.1
   shared_preferences: ^2.2.2
+  gallery_saver: ^2.3.2
 
 
 dev_dependencies:
