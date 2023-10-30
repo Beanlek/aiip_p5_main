@@ -1,7 +1,9 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, use_build_context_synchronously, avoid_print
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, use_build_context_synchronously, avoid_print, non_constant_identifier_names
 
 //basic library
+import 'package:aiip_p5_main/model/outlet.dart';
 import 'package:aiip_p5_main/util.dart';
+import 'model/van_user.dart';
 import 'package:intl/intl.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 
@@ -11,16 +13,12 @@ import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-// import 'package:aiip_p5_main/auth_postgresql.dart';
 import 'package:flutter/material.dart';
 
 //for client connection library
 import 'package:flutter_oss_aliyun/flutter_oss_aliyun.dart';
 import 'package:lottie/lottie.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
-
-//misc
-// import 'util.dart';
 
 final myFormat = DateFormat.yMd().add_Hms();
 
@@ -40,12 +38,29 @@ class DisplayPictureScreen extends StatelessWidget {
   Future<bool> uploadFiles() async {
     try {
       int i = 0;
+
+      //outlet
+      const String outletId = '011e9e0d-713e-40bf-afc1-0974f50a18ed';
+      final String outletJsonString = await _getOutlet(outletId);
+      dynamic outletJson = json.decode(outletJsonString);
+      var outlet = Outlet.fromJson(outletJson[0]);
+
+      //user
+      const String vanUserId = '0af6c2bf-abb9-41b2-9eff-ba7668948d63';
+      final String userJsonString = await _getVanUser(vanUserId);
+      dynamic userJson = json.decode(userJsonString);
+      var user = VanUser.fromJson(userJson[0]);
+
+      final String username = user.firstName + user.lastName;
+
       while (i < allFileName.length) {
+        final imageFileName =
+            '${outlet.outletName}_${outlet.outletLocation}_${allFileName[i]}';
         print(i);
         print(allFileName[i]);
-        print(allFileBytes[i]);
+        // print(allFileBytes[i]);
         print(allFilePath[i]);
-        final truePath = 'API-model-test/${allFileName[i]}';
+        final truePath = 'API-model-test/$imageFileName';
         GallerySaver.saveImage(allFilePath[i]);
         await Client().putObject(
           allFileBytes[i],
@@ -58,8 +73,9 @@ class DisplayPictureScreen extends StatelessWidget {
           ),
         );
         final String fileUrl = await Client().getSignedUrl(truePath);
-        _insertImage(allFileName[i], fileUrl.substring(0, fileUrl.indexOf('?')),
-            'imran-debug');
+
+        _insertImage(vanUserId, imageFileName,
+            fileUrl.substring(0, fileUrl.indexOf('?')), username, outlet.id);
         i++;
       }
       return true;
@@ -417,14 +433,47 @@ class DisplayPictureScreen extends StatelessWidget {
     // return 'http://localhost:8080';
   }
 
-  _insertImage(String imageName, String imagePath, String createdBy) async {
-    final url = Uri.parse('${_domainName()}/insert/insert_image');
+  // _insertImage(String imageName, String imagePath, String createdBy) async {
+  //   final url = Uri.parse('${_domainName()}/insert/insert_image');
+  //   http.post(url,
+  //       headers: {"Content-Type": "application/json"},
+  //       body: jsonEncode({
+  //         "image_name": imageName,
+  //         "image_path": imagePath,
+  //         "created_by": createdBy
+  //       }));
+  // }
+
+  _insertImage(String van_user_id, String image_name, String image_path,
+      String created_by, String outlet_id) async {
+    final url = Uri.parse('${_domainName()}/insert/image');
     http.post(url,
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
-          "image_name": imageName,
-          "image_path": imagePath,
-          "created_by": createdBy
+          "van_user_id": van_user_id,
+          "image_name": image_name,
+          "image_path": image_path,
+          "created_by": created_by,
+          "outlet_id": outlet_id
         }));
+  }
+
+  _getVanUser(String van_user_id) async {
+    final url = Uri.parse('${_domainName()}/get_one_van_user');
+    var response = await http.post(url,
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({"van_user_id": van_user_id}));
+
+    return response.body;
+  }
+
+  _getOutlet(String outlet_id) async {
+    final url = Uri.parse('${_domainName()}/get_one_outlet');
+    var response = await http.post(url,
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({"outlet_id": outlet_id}));
+    print(response.body);
+
+    return response.body;
   }
 }

@@ -159,7 +159,9 @@ class _CameraState extends State<Camera> {
       final image = await _cameraController.takePicture();
 
       setState(() {
-        fileName = 'PhoneAkmal-${myFormat.format(DateTime.now())}.jpg';
+        String noSemiColon =
+            myFormat.format(DateTime.now()).replaceAll(RegExp(r'[:]'), '-');
+        fileName = '$noSemiColon.jpg';
         filePath = image.path;
         fileBytes = File(filePath!).readAsBytesSync();
 
