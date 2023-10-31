@@ -3,7 +3,7 @@
 //basic library
 import 'package:aiip_p5_main/model/outlet.dart';
 import 'package:aiip_p5_main/util.dart';
-import 'model/van_user.dart';
+import 'package:aiip_p5_main/model/van_user.dart';
 import 'package:intl/intl.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 
@@ -26,14 +26,15 @@ class DisplayPictureScreen extends StatelessWidget {
   final List<String> allFilePath;
   final List<Uint8List> allFileBytes;
   final List<String> allFileName;
+  final VanUser user;
   // final AudioPlayer audioPlayer = AudioPlayer();
 
-  const DisplayPictureScreen({
-    super.key,
-    required this.allFilePath,
-    required this.allFileBytes,
-    required this.allFileName,
-  });
+  const DisplayPictureScreen(
+      {super.key,
+      required this.allFilePath,
+      required this.allFileBytes,
+      required this.allFileName,
+      required this.user});
 
   Future<bool> uploadFiles() async {
     try {
@@ -46,10 +47,10 @@ class DisplayPictureScreen extends StatelessWidget {
       var outlet = Outlet.fromJson(outletJson[0]);
 
       //user
-      const String vanUserId = '0af6c2bf-abb9-41b2-9eff-ba7668948d63';
-      final String userJsonString = await _getVanUser(vanUserId);
-      dynamic userJson = json.decode(userJsonString);
-      var user = VanUser.fromJson(userJson[0]);
+      // const String vanUserId = '0af6c2bf-abb9-41b2-9eff-ba7668948d63';
+      // final String userJsonString = await _getVanUser(vanUserId);
+      // dynamic userJson = json.decode(userJsonString);
+      // var user = VanUser.fromJson(userJson[0]);
 
       final String username = user.firstName + user.lastName;
 
@@ -74,7 +75,7 @@ class DisplayPictureScreen extends StatelessWidget {
         );
         final String fileUrl = await Client().getSignedUrl(truePath);
 
-        _insertImage(vanUserId, imageFileName,
+        _insertImage(user.id, imageFileName,
             fileUrl.substring(0, fileUrl.indexOf('?')), username, outlet.id);
         i++;
       }
